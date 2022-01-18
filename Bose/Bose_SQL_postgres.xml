@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boseDAO">
+
+
+	<resultMap id="boseMap" type="egovframework.bose.service.BoseVO">
+
+		<result property="id" column="id"/>
+		<result property="residentNum" column="resident_num"/>
+		<result property="zipCode" column="zip_code"/>
+	
+		<result property="userName" column="user_name"/>
+		<result property="birthDate" column="birth_date"/>
+		<result property="gender" column="gender"/>
+		<result property="solarLunar" column="solar_lunar"/>
+		<result property="address" column="address"/>
+		<result property="phoneHome" column="phone_home"/>
+		<result property="phoneWork" column="phone_work"/>
+		<result property="phoneMobile" column="phone_mobile"/>
+		<result property="regDate" column="reg_date"/>
+		<result property="mail" column="mail"/>
+		<result property="userNote" column="user_note"/>
+
+
+<!-- 		<result property="id" column="id"/> -->
+<!-- 		<result property="name" column="name"/> -->
+<!-- 		<result property="description" column="description"/> -->
+<!-- 		<result property="useYn" column="use_yn"/> -->
+<!-- 		<result property="regUser" column="reg_user"/> -->
+<!-- 		<result property="regDate" column="reg_date"/> -->
+	</resultMap>
+
+	<insert id="insertBose" parameterType="BoseVO">
+
+
+			INSERT INTO TEACHER
+				( 
+				    USER_NAME
+				  , RESIDENT_NUM
+				  , BIRTH_DATE
+				  , GENDER
+				  , SOLAR_LUNAR
+				  , ADDRESS
+				  , PHONE_HOME
+				  , PHONE_WORK
+				  , PHONE_MOBILE
+				  , REG_DATE
+				  , MAIL
+				  , USER_NOTE )
+			VALUES ( 
+				    #{userName}
+				  , #{residentNum}
+				  , #{birthDate}
+				  , #{gender}
+				  , #{solarLunar}
+				  , #{address}
+				  , #{phoneHome}
+				  , #{phoneWork}
+				  , #{phoneMobile}
+				  , #{regDate}
+				  , #{mail}
+				  , #{userNote} )
+				  
+				  
+<!-- 			INSERT INTO BUZZ -->
+<!-- 				(  -->
+<!-- 				  	NAME -->
+<!-- 				  , DESCRIPTION -->
+<!-- 				  , USE_YN -->
+<!-- 				  , REG_USER ) -->
+<!-- 			VALUES ( -->
+<!-- 				 	 #{name} -->
+<!-- 				  , #{description} -->
+<!-- 				  , #{useYn} -->
+<!-- 				  , #{regUser} ) -->
+
+	</insert>
+
+	<update id="updateBose">
+
+			UPDATE TEACHER
+			SET 
+				 	SOLAR_LUNAR=#{solarLunar}
+				  , ADDRESS=#{address}
+				  , PHONE_HOME=#{phoneHome}
+				  , PHONE_WORK=#{phoneWork}
+				  , PHONE_MOBILE=#{phoneMobile}
+				  , REG_DATE=#{regDate}
+				  , MAIL=#{mail}
+				  , USER_NOTE=#{userNote}
+			WHERE ID=#{id}
+
+<!-- 			UPDATE BUZZ -->
+<!-- 			SET ID=#{id} -->
+<!-- 				, NAME=#{name} -->
+<!-- 				, DESCRIPTION=#{description} -->
+<!-- 				, USE_YN=#{useYn} -->
+<!-- 				  WHERE ID=#{id} -->
+
+	</update>
+
+	<delete id="deleteBose">
+
+			DELETE FROM TEACHER
+			WHERE ID=#{id}
+
+
+<!-- 			DELETE FROM BUZZ -->
+<!-- 			WHERE ID=#{id} -->
+
+	</delete>
+
+	<select id="selectBose" resultType="BoseVO">
+
+
+			SELECT
+				  ID, USER_NAME, RESIDENT_NUM, BIRTH_DATE, GENDER, SOLAR_LUNAR, ZIP_CODE, ADDRESS, PHONE_HOME, PHONE_WORK, PHONE_MOBILE, REG_DATE, MAIL, USER_NOTE
+			FROM TEACHER
+			WHERE ID=#{id}
+
+<!-- 			SELECT -->
+<!-- 				ID, NAME, DESCRIPTION, USE_YN, REG_USER, REG_DATE -->
+<!-- 			FROM BUZZ -->
+<!-- 			WHERE ID=#{id} -->
+
+	</select>
+
+	<select id="selectBoseList" parameterType="BoseVO" resultType="egovMap">
+
+
+
+			SELECT
+				  ID, USER_NAME, RESIDENT_NUM, BIRTH_DATE, GENDER, SOLAR_LUNAR, ZIP_CODE, ADDRESS, PHONE_HOME, PHONE_WORK, PHONE_MOBILE, REG_DATE, MAIL, USER_NOTE
+			FROM TEACHER
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND	ID = #{searchId}
+					</when>
+		            <when test="searchCondition == 1">
+						AND	USER_NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 2">
+						AND	PHONE_MOBILE LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 3">
+						AND	RESIDENT_NUM LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+			ORDER BY ID ASC
+			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+
+
+
+
+
+<!-- 			SELECT -->
+<!-- 				ID, NAME, DESCRIPTION, USE_YN, REG_USER, REG_DATE -->
+<!-- 			FROM BUZZ -->
+<!-- 			WHERE 1=1 -->
+<!-- 			<if test="searchKeyword != null and searchKeyword != ''"> -->
+<!-- 		        <choose> -->
+<!-- 		            <when test="searchCondition == 0"> -->
+<!-- 						AND	ID = #{searchId} -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 1"> -->
+<!-- 						AND	NAME LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 2"> -->
+<!-- 						AND	USE_YN LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 3"> -->
+<!-- 						AND	DESCRIPTION LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
+<!-- 			</if> -->
+<!-- 			ORDER BY ID ASC -->
+<!-- 			LIMIT #{recordCountPerPage} OFFSET #{firstIndex} -->
+	</select>
+
+	<select id="selectBoseListTotCnt" parameterType="BoseVO" resultType="int">
+
+
+		SELECT COUNT(1) AS "CNT"  FROM TEACHER
+		WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+		        <choose>
+		            <when test="searchCondition == 0">
+						AND	ID = #{searchId}
+					</when>
+		            <when test="searchCondition == 1">
+						AND	USER_NAME LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 2">
+						AND	PHONE_MOBILE LIKE '%' || #{searchKeyword} || '%'
+					</when>
+		            <when test="searchCondition == 3">
+						AND	RESIDENT_NUM LIKE '%' || #{searchKeyword} || '%'
+					</when>
+				</choose>
+			</if>
+
+
+<!-- 		SELECT COUNT(1) AS "CNT"  FROM BUZZ -->
+<!-- 		WHERE 1=1 -->
+<!-- 			<if test="searchKeyword != null and searchKeyword != ''"> -->
+<!-- 		        <choose> -->
+<!-- 		            <when test="searchCondition == 0"> -->
+<!-- 						AND	ID = #{searchId} -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 1"> -->
+<!-- 						AND	NAME LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 2"> -->
+<!-- 						AND	USE_YN LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 		            <when test="searchCondition == 3"> -->
+<!-- 						AND	DESCRIPTION LIKE '%' || #{searchKeyword} || '%' -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
+<!-- 			</if> -->
+	</select>
+
+
+</mapper>
